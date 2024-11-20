@@ -15,8 +15,40 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('statut','=',1)->get();
-        return response()->json(['message' => 'login successfuly','code' =>'200', 'user' => $users]);
+        $users = User::All();
+        return response()->json(['message' => 'login successfuly','code' =>'200', 'users' => $users]);
+    }
+
+    public function login(Request $request){
+        $loginDetails = $request->only('email','password');
+        $user = User::where('email',$request->input('email'))->first();
+        if(Auth::attempt($loginDetails)){
+            $token = $user->createToken('my-app-token')->plainTextToken;
+             return response()->json(['message' => 'login successfuly','code' =>'200','user'=>$user,'token'=>$token]);
+         }else{
+             return response()->json(['message' => 'login details wrong','code'=>'err']);
+         }
+         $request->session()->put('keyUser', $user);
+        /*$credentials = $request->validate([
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+
+        if(!Auth::attempt($credentials)){
+            throw ValidationException::WithMessages([
+                'email' => [
+                    __('auth.failed');
+                ]
+                ]);
+        }
+
+        $user = User::where('email',$request->input('email'))->first();
+       
+        return response()->json(['message' => 'login successfuly','code' =>'200','user'=>$user]);*/
+    }
+
+    public function logout(){
+        return Auth::logout();
     }
 
     /**
@@ -48,6 +80,10 @@ class UserController extends Controller
             return response()->json(['message'=>"User failed"]);
 
         }
+    }
+
+    public function message(Request $request){
+        return response()->json(['message'=>"User created"]);
     }
 
     /**

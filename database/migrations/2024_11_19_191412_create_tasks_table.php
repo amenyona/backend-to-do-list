@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAvisTable extends Migration
+class CreateTasksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateAvisTable extends Migration
      */
     public function up()
     {
-        Schema::create('avis', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->boolean('completed')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateAvisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('avis');
+        Schema::dropIfExists('tasks');
     }
 }

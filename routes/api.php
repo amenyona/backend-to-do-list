@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +19,15 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('connect',[ApiController::class,'login']);
+Route::post("logout",[UserController::class,'logout']);
+Route::post('addtask',[TaskController::class,'addTask']);
+Route::delete('delete/{id}',[TaskController::class,'destroy']);
+Route::get('tasks_liste',[TaskController::class,'index']);
+Route::get('task/{id}', [TaskController::class,'getTask']);
+Route::put('task/{id}',[TaskController::class,'update']);
+Route::post('login',[ApiController::class,'login']);
 Route::get('user_liste',[UserController::class,'index']);
-Route::post('user_store',[UserController::class,'store']);
-Route::put('user_update',[UserController::class,'update']);
-Route::put('user_destroy',[UserController::class,'destroy']);
-Route::get('user_search/{arg}',[UserController::class,'search']);
-Route::get("list/{id?}",[UserController::class,'show']);
+Route::put('taskcompleted/{id}',[TaskController::class,'complete']);
+Route::get('completed_task_list',[TaskController::class,'indexcompleted']);
+
+
